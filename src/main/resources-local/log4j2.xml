@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info" monitorInterval="30">
+	<Properties>
+		<Property name="LOG_FORMAT">%d{yyyyMMdd HH:mm:ss.SSS} [%thread][%method:%line] %-5level %logger{36} - %msg %n</Property>
+		<Property name="BASE_DIR">logs</Property>
+		<Property name="FILE_NAME">hourfun-ensemble</Property>
+		<Property name="ERROR_FILE_NAME">hourfun-ensemble-error</Property>
+	</Properties>
+
+	<Appenders>
+		<Console name="STDOUT" target="SYSTEM_OUT" follow="true">
+			<PatternLayout pattern="${LOG_FORMAT}" />
+		</Console>
+
+		<RollingFile name="FILE"
+			fileName="${BASE_DIR}/${FILE_NAME}.log"
+			filePattern="${BASE_DIR}/${FILE_NAME}.%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout pattern="${LOG_FORMAT}" />
+			<Policies>
+				<SizeBasedTriggeringPolicy size="100 MB" />
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+			<DefaultRolloverStrategy max="40">
+				<Delete basePath="${BASE_DIR}">
+					<IfFileName glob="*.log" />
+					<IfLastModified age="30d" />
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+
+		<RollingFile name="ERROR_FILE"
+			fileName="${BASE_DIR}/${ERROR_FILE_NAME}.log"
+			filePattern="${BASE_DIR}/${ERROR_FILE_NAME}.%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout pattern="${LOG_FORMAT}" />
+			<Policies>
+				<SizeBasedTriggeringPolicy size="100 MB" />
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+			<DefaultRolloverStrategy>
+				<Delete basePath="${BASE_DIR}">
+					<IfFileName glob="*.log" />
+					<IfLastModified age="30d" />
+				</Delete>
+			</DefaultRolloverStrategy>
+			<ThresholdFilter level="ERROR" onMatch="ACCEPT" onMisMatch="DENY" />
+		</RollingFile>
+	</Appenders>
+
+	<Loggers>
+		<Logger name="jdbc.audit" level="OFF"/>
+		<Logger name="jdbc.sqltiming" level="OFF"/>
+		<Logger name="jdbc.connection" level="OFF"/>
+		<Logger name="jdbc.resultset" level="OFF"/>
+		<Logger name="jdbc.resultsettable" level="OFF"/>
+
+		<Logger name="jdbc.sqlonly" level="INFO" additivity="false">
+			<AppenderRef ref="ERROR_FILE"/>
+			<AppenderRef ref="FILE"/>
+			<AppenderRef ref="STDOUT" />
+		</Logger>
+
+		<Logger name="org.hibernate.SQL" level="debug" additivity="false">
+			<AppenderRef ref="STDOUT" />
+		</Logger>
+		<Logger name="org.hibernate.type.descriptor.sql" level="trace" additivity="false">
+			<AppenderRef ref="STDOUT" />
+		</Logger>
+
+		<Logger name="com.hourfun" level="INFO" additivity="false">
+			<AppenderRef ref="ERROR_FILE"/>
+			<AppenderRef ref="FILE"/>
+			<AppenderRef ref="STDOUT" />
+		</Logger>
+
+		<Root level="INFO">
+			<AppenderRef ref="ERROR_FILE"/>
+			<AppenderRef ref="FILE" />
+			<AppenderRef ref="STDOUT" />
+		</Root>
+	</Loggers>
+</Configuration>

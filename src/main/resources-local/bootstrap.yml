@@ -1,0 +1,17 @@
+#SERVER CONFIGURATION
+server:
+  port: ${PORT:6011}
+  servlet:
+    application-display-name: hourfun-ensemble
+
+#SPRING CONFIGURATION
+spring:
+  application:
+    name: hourfun-ensemble
+  profiles:
+    active: local
+  cloud:
+    config:
+      #http://localhost:6999/hourfun-ensemble/local
+      uri: http://localhost:6999
+      # name: hourfun-ensemble

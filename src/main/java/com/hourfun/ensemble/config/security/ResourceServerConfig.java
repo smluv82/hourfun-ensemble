@@ -15,10 +15,11 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
 //                .anyRequest()
-                .antMatchers("/")
-                .permitAll()
                 .antMatchers("/test/**")
-                .authenticated();
+                .hasRole("ADMIN")
+                .antMatchers("/")
+                .permitAll();
+                //.authenticated();
     }
 
     @Primary
